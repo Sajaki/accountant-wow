@@ -28,6 +28,7 @@ ACCLOC_TAXI			=	"Taxi Fares";
 ACCLOC_OTHER		=	"Unknown";
 ACCLOC_REPAIR		=	"Repair Costs";
 ACCLOC_AUC			=	"Auction House";
+ACCLOC_SYS			=	"Other System";
 
 -- Buttons
 ACCLOC_RESET		=	"Clear Data";
