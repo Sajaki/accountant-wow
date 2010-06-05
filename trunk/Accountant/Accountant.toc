@@ -6,6 +6,12 @@
 ## DefaultState: enabled
 ## RequiredDeps: 
 ## SavedVariables: Accountant_SaveData,Accountant_Options
+## X-Embeds: 
+## X-Credits: urnati
+## X-Category: Information
+## X-Website: http://code.google.com/p/accountant-wow/
+## X-Email: accountant-wow@googlegroups.com
+## X-License: All rights reserved (See license.txt)
 
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
