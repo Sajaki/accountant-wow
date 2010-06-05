@@ -682,10 +682,10 @@ function SC:LDB_Init()
 -- Initialize the Data Broker 'button'
 --
    SC.LDB_frame.obj = 
-	LibStub("LibDataBroker-1.1"):NewDataObject("Accountant_LDB", {
+	LibStub("LibDataBroker-1.1"):NewDataObject("Accountant", {
 		type = "data source",
 		icon = SC.artwork_path.."AccountantButton.blp",
-		label = "Accountant_",
+		label = "Accountant",
 		text  = "nyl",
    
 		OnClick = function(self, button)
