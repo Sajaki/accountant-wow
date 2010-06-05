@@ -1,5 +1,14 @@
 -- Change Log:
 
+v3.10.30300: 2010-06-05
+- Added check for gold change on new session. Changes are put in "Unknown".
+For example you use the web AH or you use another system to play WoW.
+- Changed server lookup to allow "(" in server name. e.i. "Blizz_Server (US)"
+- Updated Ace libraries to lastest from Curse
+- Updated LDB Accountant names (for Titan and other LDB display addons)
+- Added several X- in the toc. Matched X-Category for Titan
+- Added license
+
 v3.9.30300: 2009-12-12
 - Updated toc version because the zip was not right
 - First time using the WoWInterface project features - have more learning to do...

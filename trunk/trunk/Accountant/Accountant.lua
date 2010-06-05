@@ -1011,6 +1011,7 @@ function SC.LoadSavedData()
 	SC.data["TAXI"] = {Title = ACCLOC_TAXI};
 	SC.data["REPAIRS"] = {Title = ACCLOC_REPAIR};
 	SC.data["OTHER"] = {Title = ACCLOC_OTHER};
+--	SC.data["SYSTEM"] = {Title = ACCLOC_SYS};
 
 	for key,value in next,SC.data do
 		for modekey,mode in next,SC.log_modes do
@@ -1130,6 +1131,8 @@ function SC.LoadSavedData()
 
 	end
 
+	local old_gold = Accountant_SaveData[Accountant.player]["options"].totalcash
+	SC.UpdateOther(old_gold, GetMoney())
 	Accountant_SaveData[Accountant.player]["options"].version = SC.Version;
 	Accountant_SaveData[Accountant.player]["options"].totalcash = GetMoney();
 
@@ -1982,6 +1985,45 @@ function SC.UpdateLog()
 			end
 		end
 
+	if AccountantFrame:IsVisible() then
+		SC.OnShow();
+	end
+end
+
+function SC.UpdateOther(old_gold, new_gold)
+--
+-- Update the Accountant data based on the current gold versus the last saved gold
+--
+	diff = old_gold - new_gold;
+	if diff == 0 or diff == nil then
+		return;
+	end		
+
+	local mode = "OTHER"
+	local out_str = " since last session."
+	if diff >0 then
+		for key,logmode in next,SC.log_modes do
+			if logmode ~= "Session" then
+				SC.data[mode][logmode].In = SC.data[mode][logmode].In + diff;
+				Accountant_SaveData[Accountant.player]["data"][mode][logmode].In = SC.data[mode][logmode].In;
+			end
+		end
+		SC.Print(_G["GREEN_FONT_COLOR_CODE"].."Gained ".._G["FONT_COLOR_CODE_CLOSE"]
+			..SC.NiceCash(diff, false, false)..out_str)
+
+	elseif diff < 0 then
+		diff = diff * -1;
+		for key,logmode in next,SC.log_modes do
+			if logmode ~= "Session" then
+				SC.data[mode][logmode].Out = SC.data[mode][logmode].Out + diff;
+				Accountant_SaveData[Accountant.player]["data"][mode][logmode].Out = SC.data[mode][logmode].Out;
+			end
+		end
+		SC.Print(_G["RED_FONT_COLOR_CODE"].."Lost ".._G["FONT_COLOR_CODE_CLOSE"]
+			..SC.NiceCash(diff, false, false)..out_str)
+	end
+
+	-- should only be on login but just in case we start using it elsewhere
 	if AccountantFrame:IsVisible() then
 		SC.OnShow();
 	end
