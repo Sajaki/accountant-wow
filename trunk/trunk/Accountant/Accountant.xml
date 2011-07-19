@@ -9,7 +9,7 @@
 	<Button name="AccountantTabTemplate"
 		inherits="CharacterFrameTabButtonTemplate" virtual="true">
 		<Scripts>
-			<OnClick>Accountant.Tab_OnClick();</OnClick>
+			<OnClick>Accountant.Tab_OnClick(self);</OnClick>
 		</Scripts>
 	</Button>
 	<FontString name="AccountantTextTemplate" inherits="GameFontHighlightSmall" virtual="true">
@@ -335,7 +335,7 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>Accountant.Button_Alliance_Toggle();</OnClick>
+					<OnClick>Accountant.Button_Alliance_Toggle(self);</OnClick>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="AccountantFrameHordeToggleButton"
@@ -349,7 +349,7 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>Accountant.Button_Horde_Toggle();</OnClick>
+					<OnClick>Accountant.Button_Horde_Toggle(self);</OnClick>
 				</Scripts>
 			</CheckButton>
 			<Frame name="$parentRow1" inherits="AccountantRowTemplate">
@@ -594,17 +594,17 @@
 				-- Make Frame Moveable. 
 				tinsert(UISpecialFrames, "AccountantFrame"); 
 				UIPanelWindows["AccountantFrame"] = { area = "left", pushable = 11 };
-				this:RegisterForDrag("LeftButton");
+				self:RegisterForDrag("LeftButton");
 
 				-- Setup 
-				Accountant.RegisterEvents();
+				Accountant.RegisterEvents(self);
 			</OnLoad>
 			<OnShow>Accountant.OnShow();</OnShow>
 			<OnHide>Accountant.OnHide();</OnHide>
 			<OnEvent>Accountant.OnEvent(event, arg1);</OnEvent>
-			<OnDragStart>this:StartMoving();</OnDragStart>
-			<OnDragStop>this:StopMovingOrSizing();</OnDragStop>
-			<OnMouseUp>this:StopMovingOrSizing();</OnMouseUp>
+			<OnDragStart>self:StartMoving();</OnDragStart>
+			<OnDragStop>self:StopMovingOrSizing();</OnDragStop>
+			<OnMouseUp>self:StopMovingOrSizing();</OnMouseUp>
 		</Scripts>
 	</Frame>
 	<GameTooltip name="AccountantTooltip" inherits="GameTooltipTemplate"

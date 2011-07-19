@@ -729,6 +729,22 @@ function SC:LDB_Update()
 		total_str -- rely on the text setup for spacing
 		.."|cFFF5B800"..mode..FONT_COLOR_CODE_CLOSE
 		.." "..SC.NiceCash(cash, true, true)
+		
+--[[
+	if mode == SC.log_modes_short[1] then
+		SC.LDB_frame.obj.icon = SC.artwork_path.."copper.tga"
+	elseif mode == SC.log_modes_short[2] then
+		SC.LDB_frame.obj.icon = SC.artwork_path.."silver.tga"
+	elseif mode == SC.log_modes_short[3] then
+		SC.LDB_frame.obj.icon = SC.artwork_path.."gold.tga"
+	else
+		SC.LDB_frame.obj.icon = SC.artwork_path.."AccountantButton.blp"
+	end
+	SC.Print(
+		"icon: '"..SC.LDB_frame.obj.icon.."'"
+		)
+--SC.log_modes_short = {"Sess","Day","Week","Tot"};
+--]]
 end
 
 function SC.LDB_OnTooltipShow(tooltip)
@@ -815,46 +831,46 @@ end
 --[[ Accountant.lua begin
 ]]
 
-function SC.RegisterEvents()
+function SC.RegisterEvents(self)
 --
 -- Register for all the events needed to track the flow of gold
 --
-	this:RegisterEvent("MERCHANT_SHOW");
-	this:RegisterEvent("MERCHANT_CLOSED");
-	this:RegisterEvent("MERCHANT_UPDATE");
+	self:RegisterEvent("MERCHANT_SHOW");
+	self:RegisterEvent("MERCHANT_CLOSED");
+	self:RegisterEvent("MERCHANT_UPDATE");
 
-	this:RegisterEvent("QUEST_COMPLETE");
-	this:RegisterEvent("QUEST_FINISHED");
+	self:RegisterEvent("QUEST_COMPLETE");
+	self:RegisterEvent("QUEST_FINISHED");
 	
-	this:RegisterEvent("LOOT_OPENED");
-	this:RegisterEvent("LOOT_CLOSED");
+	self:RegisterEvent("LOOT_OPENED");
+	self:RegisterEvent("LOOT_CLOSED");
 	
-	this:RegisterEvent("TAXIMAP_OPENED");
-	this:RegisterEvent("TAXIMAP_CLOSED");
+	self:RegisterEvent("TAXIMAP_OPENED");
+	self:RegisterEvent("TAXIMAP_CLOSED");
 
-	this:RegisterEvent("TRADE_SHOW");
-	this:RegisterEvent("TRADE_CLOSE");
+	self:RegisterEvent("TRADE_SHOW");
+	self:RegisterEvent("TRADE_CLOSE");
 	
-	this:RegisterEvent("MAIL_SHOW");
-	this:RegisterEvent("MAIL_INBOX_UPDATE");
-	this:RegisterEvent("MAIL_CLOSED");
---	this:RegisterEvent("MAIL_SEND_INFO_UPDATE");
---	this:RegisterEvent("MAIL_SEND_SUCCESS");
+	self:RegisterEvent("MAIL_SHOW");
+	self:RegisterEvent("MAIL_INBOX_UPDATE");
+	self:RegisterEvent("MAIL_CLOSED");
+--	self:RegisterEvent("MAIL_SEND_INFO_UPDATE");
+--	self:RegisterEvent("MAIL_SEND_SUCCESS");
 
-	this:RegisterEvent("TRAINER_SHOW");
-	this:RegisterEvent("TRAINER_CLOSED");
+	self:RegisterEvent("TRAINER_SHOW");
+	self:RegisterEvent("TRAINER_CLOSED");
 
-	this:RegisterEvent("AUCTION_HOUSE_SHOW");
-	this:RegisterEvent("AUCTION_HOUSE_CLOSED");
+	self:RegisterEvent("AUCTION_HOUSE_SHOW");
+	self:RegisterEvent("AUCTION_HOUSE_CLOSED");
 
-	this:RegisterEvent("PLAYER_MONEY");
+	self:RegisterEvent("PLAYER_MONEY");
 
-	this:RegisterEvent("UNIT_NAME_UPDATE");
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("PLAYER_LEAVING_WORLD");
+	self:RegisterEvent("UNIT_NAME_UPDATE");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("PLAYER_LEAVING_WORLD");
 		
-	this:RegisterEvent("UPDATE_INVENTORY_ALERTS");
-	this:RegisterEvent("UPDATE_INVENTORY_DURABILITY");
+	self:RegisterEvent("UPDATE_INVENTORY_ALERTS");
+	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY");
 end
 
 function SC.SetLabels()
@@ -874,7 +890,6 @@ function SC.SetLabels()
 	AccountantFrameHordeToggleButton:SetChecked(Accountant_SaveData[Accountant.player]["options"].showHorde);
 
 	-- Set the header
-	local name = this:GetName();
 	local header = getglobal("AccountantFrameTitleText");
 	if ( header ) then 
 		header:SetText(ACCLOC_TITLE.." "..SC.Version);
@@ -1000,6 +1015,8 @@ function SC.LoadSavedData()
 --
 -- Load the account data of the character that is being played
 --
+	local first_time = nil
+	
 	SC.data = {};
 	SC.data["LOOT"] = {Title = ACCLOC_LOOT};
 	SC.data["MERCH"] = {Title = ACCLOC_MERCH};
@@ -1028,6 +1045,7 @@ function SC.LoadSavedData()
 	-- If the player does not exist, this is the first time
 	-- the player has been logged in on this machine.
 	if (Accountant_SaveData[Accountant.player] == nil ) then
+		first_time = true
 		cdate = date();
 		cdate = string.sub(cdate,0,8);
 		cweek = "";
@@ -1132,7 +1150,11 @@ function SC.LoadSavedData()
 	end
 
 	local old_gold = Accountant_SaveData[Accountant.player]["options"].totalcash
-	SC.UpdateOther(old_gold, GetMoney())
+	if first_time then
+		-- do not collect 'old' gold otherwise it will be counted twice...
+	else
+		SC.UpdateOther(old_gold, GetMoney())
+	end
 	Accountant_SaveData[Accountant.player]["options"].version = SC.Version;
 	Accountant_SaveData[Accountant.player]["options"].totalcash = GetMoney();
 
@@ -1375,20 +1397,26 @@ function SC.CharDropDown_OnShow()
 --DEFAULT_CHAT_FRAME:AddMessage("Acc char drop _OnShow: ")
 end
 
-function SC.CharDropDown_OnClick()
+function SC.CharDropDown_OnClick(self)
 --
 -- Handle a selection from the toons drop down
 --
-	local id = this:GetID();
-	UIDropDownMenu_SetSelectedID(Accountant_CharDropDown, id);
+	local val = self:GetID();
+	local id = self.value
+	
+	UIDropDownMenu_SetSelectedID(Accountant_CharDropDown, val);
 
-	if( id > 1) then
-		searchChar = SC.Realm..SC.DIVIDER..SC.Toons[id-1];
-	else
+	if( id == ACCLOC_CHARS) then
 		searchChar = SC.AllDropdown;
+	else
+		searchChar = SC.Realm..SC.DIVIDER..id -- SC.Toons[id-1];
 	end
---DEFAULT_CHAT_FRAME:AddMessage("Acc char drop _OnClick: "..searchChar)
-
+--[[
+	DEFAULT_CHAT_FRAME:AddMessage("Acc char drop _OnClick: "
+..(searchChar or "?").." "
+..(val or "?").." "
+)
+--]]
    -- Change the player to the one selected
 	SC.show_toons = searchChar
 	
@@ -1397,11 +1425,11 @@ function SC.CharDropDown_OnClick()
 	SC:LDB_Update()
 end
 
-function SC.Button_Alliance_Toggle()
+function SC.Button_Alliance_Toggle(self)
 --
 -- Honor the user's selection to show or hide Alliance characters.
 --
-	if (this:GetChecked()) then
+	if (self:GetChecked()) then
 		Accountant_SaveData[SC.Button_makename()]["options"].showAlliance = true;
 	else
 		Accountant_SaveData[SC.Button_makename()]["options"].showAlliance = false;
@@ -1412,11 +1440,11 @@ function SC.Button_Alliance_Toggle()
 	SC:LDB_Update()
 end
 
-function SC.Button_Horde_Toggle()
+function SC.Button_Horde_Toggle(self)
 --
 -- Honor the user's selection to show or hide Alliance characters.
 --
-	if (this:GetChecked()) then
+	if (self:GetChecked()) then
 		Accountant_SaveData[SC.Button_makename()]["options"].showHorde = true;
 	else
 		Accountant_SaveData[SC.Button_makename()]["options"].showHorde = false;
@@ -2029,12 +2057,12 @@ function SC.UpdateOther(old_gold, new_gold)
 	end
 end
 
-function SC.Tab_OnClick()
+function SC.Tab_OnClick(self)
 --
 -- Switch tabs on the Accountant window on user request (click)
 --
-	PanelTemplates_SetTab(AccountantFrame, this:GetID());
-	SC.current_tab = this:GetID();
+	PanelTemplates_SetTab(AccountantFrame, self:GetID());
+	SC.current_tab = self:GetID();
 	PlaySound("igCharacterInfoTab");
 	SC.OnShow();
 end
