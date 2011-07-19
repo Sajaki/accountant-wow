@@ -1,5 +1,12 @@
 -- Change Log:
 
+v3.11.40200: 2011-07-18
+- Updated TOC.
+
+v3.11.40000: 2010-10-19
+- Updated TOC.
+- Small change to prevent errors when selecting session/day/week tabs.
+
 v3.10.30300: 2010-06-05
 - Added check for gold change on new session. Changes are put in "Unknown".
 For example you use the web AH or you use another system to play WoW.
