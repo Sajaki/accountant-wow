@@ -1855,6 +1855,10 @@ function SC.GetCashForAllToons(for_display)
 				end
 			end
 			i=i+1;
+			if i >= SC.MaxRows then
+				SC.Print("ERROR: Too many characters saved. Please delete some in options!! ")
+				return 0 -- we really have no idea what the real values is...
+			end
 		end
 	end
 	   
@@ -2022,7 +2026,7 @@ function SC.UpdateOther(old_gold, new_gold)
 --
 -- Update the Accountant data based on the current gold versus the last saved gold
 --
-	diff = old_gold - new_gold;
+	diff = new_gold - old_gold;
 	if diff == 0 or diff == nil then
 		return;
 	end		
@@ -2032,8 +2036,8 @@ function SC.UpdateOther(old_gold, new_gold)
 	if diff >0 then
 		for key,logmode in next,SC.log_modes do
 			if logmode ~= "Session" then
-				SC.data[mode][logmode].In = SC.data[mode][logmode].In + diff;
-				Accountant_SaveData[Accountant.player]["data"][mode][logmode].In = SC.data[mode][logmode].In;
+--				SC.data[mode][logmode].In = SC.data[mode][logmode].In + diff;
+--				Accountant_SaveData[Accountant.player]["data"][mode][logmode].In = SC.data[mode][logmode].In;
 			end
 		end
 		SC.Print(_G["GREEN_FONT_COLOR_CODE"].."Gained ".._G["FONT_COLOR_CODE_CLOSE"]
@@ -2043,8 +2047,8 @@ function SC.UpdateOther(old_gold, new_gold)
 		diff = diff * -1;
 		for key,logmode in next,SC.log_modes do
 			if logmode ~= "Session" then
-				SC.data[mode][logmode].Out = SC.data[mode][logmode].Out + diff;
-				Accountant_SaveData[Accountant.player]["data"][mode][logmode].Out = SC.data[mode][logmode].Out;
+--				SC.data[mode][logmode].Out = SC.data[mode][logmode].Out + diff;
+--				Accountant_SaveData[Accountant.player]["data"][mode][logmode].Out = SC.data[mode][logmode].Out;
 			end
 		end
 		SC.Print(_G["RED_FONT_COLOR_CODE"].."Lost ".._G["FONT_COLOR_CODE_CLOSE"]
