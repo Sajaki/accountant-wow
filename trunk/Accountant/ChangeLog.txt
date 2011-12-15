@@ -1,7 +1,9 @@
 -- Change Log:
 
-v3.11.40200: 2011-07-18
+3.12.40300: 2011-12-14
 - Updated TOC.
+- Fixed error calculating gold when gold is made / lost offline (web AH).
+- Fixed an error when someone has too many characters saved. Accountant only shows 15.
 
 v3.11.40000: 2010-10-19
 - Updated TOC.
