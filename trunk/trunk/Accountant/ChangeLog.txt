@@ -1,5 +1,8 @@
 -- Change Log:
 
+3.13.40300: 2011-12-15
+- Fixed the botched fix for calculating gold when gold is made / lost offline (web AH).
+
 3.12.40300: 2011-12-14
 - Updated TOC.
 - Fixed error calculating gold when gold is made / lost offline (web AH).
