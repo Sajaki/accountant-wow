@@ -4,8 +4,30 @@
 
 The change history and known issues are specified below.
 
+To have the Most recent files check curse. I will upload there first.
+
 
 = Details =
+4.05.50001:Removed Bmah functions temporarily for they caused Lua errors. Event handlers are not implemented yet.
+4.04.50001: 2012-08-27
+-Final changes to BMAH, Tested, Works.
+no bmah mail tracking yet, Will be added in future update.
+4.03.50001 beta 2012-08-19 (Project taken over By Thorismud
+-added the Black Market auction house. and updated for mist of pandaria, (only for MOP beta client)
+ Due to insanely high prices on the black market, not fully tested. Please if anyone reads this, if you find bugs,
+ let me know.
+ as for 5.0.0 this addon will be updated and maintained by Thorismud, I will be taking over the project from Urnati
+3.13.40300: 2011-12-15
+- Fixed the botched fix for calculating gold when gold is made / lost offline (web AH).
+
+3.12.40300: 2011-12-14
+- Updated TOC.
+- Fixed error calculating gold when gold is made / lost offline (web AH).
+- Fixed an error when someone has too many characters saved. Accountant only shows 15.
+
+v3.11.40000: 2010-10-19
+- Updated TOC.
+- Small change to prevent errors when selecting session/day/week tabs.
 
 v3.10.30300: 2010-06-05
 - Added check for gold change on new session. Changes are put in "Unknown".
